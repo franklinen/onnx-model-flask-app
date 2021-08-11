@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Transformer</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    </head>
+
+    <body>
+        <h1 class="text-center">Image Transformer</h1>
+
+        <form class="p-3 text=center" action='/', method="POST" enctype="multipart/form-data">
+            <input class="form-control" type="file" name="imagefile" >
+            <input class="bin bin-primary m[-]"type="submit" value="Transform Image" >
+        </form>
+        <img src="{{ tr_image }}" alt="Tr Image">
+    </body>
+</html>
