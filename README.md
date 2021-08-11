@@ -22,7 +22,7 @@
 
 #### requirements.txt
 **dependencies for running the app**
-to generate the requirements file use the command below
+- to generate the requirements file use the command below
 - pipreqs  /"Working Directory"/
 
 ## Tech stack
