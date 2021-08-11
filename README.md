@@ -26,10 +26,10 @@
 - pipreqs  /"Working Directory"/
 
 ## Tech stack
-Ubuntu 18.04
-Python
-Flask 
-Docker
+- Ubuntu 18.04
+- Python 3.8.8
+- Flask 1.1.2
+- Docker
 
 **All computations were done on ubuntu 18.04**
 
