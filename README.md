@@ -17,8 +17,8 @@
 
 #### Dockerfile
 **built docker image from ubuntu18.04. To build cocker image and run it use the commands below**
-- docker build
-- docker run -p 
+- _docker build ._
+- _docker run -p_ 
 
 #### requirements.txt
 **dependencies for running the app**
