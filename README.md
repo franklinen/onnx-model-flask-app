@@ -3,7 +3,8 @@
 #### Introduction 
 
 In this project, we use pretrained onnx image style transfer models to build a flask app packaged in docker for implememting image conversions.
-The goal is to demonstrate the ease of running models packaged as onnx forms compared to models in their native forms. 
+The goal is to demonstrate the ease of running models packaged as onnx forms compared to models in their native forms. Models packaged in onnx 
+forms runs fatser and are easier to deploy than models used in their native forms. 
 
 **This app is using Flask 1.1.2 and Python 3.8.8**. 
 
