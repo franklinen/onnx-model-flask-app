@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Upload</title>
+</head>
+<body>
+	<h1>Upload your image(s) and select a style</h1>
+	<form id="upload-form" action="{{url_for('upload')}}" method= "POST" enctype="multipart/form-data">
+		<input type="file" name="file" accept="image/*" multiple>
+		<input type="submit" value="Upload">
+		<br><br>
+
+		<div>
+			<label for="style">Choose an image style:</label>
+			<select id="style" name="style">
+				<!-- onnx pretrained models from https://github.com/onnx/models/tree/master/vision/style_transfer/fast_neural_style/model-->
+				<option value="mosaic-9.onnx">Mosaic</option>
+				<option value="candy-9.onnx">Candy</option>
+				<option value="rain-princess-9.onnx">Rain Princess</option>
+				<option value="udnie-9.onnx">Udnie</option>
+				<option value="pointilism-9.onnx">Pointilism</option>
+                <option value="mosaic-8.onnx">Mosaic1</option>
+				<option value="candy-8.onnx">Candy1</option>
+				<option value="rain-princess-8.onnx">Rain Princess1</option>
+				<option value="udnie-8.onnx">Udnie1</option>
+				<option value="pointilism-8.onnx">Pointilism1</option>
+            </select>
+		</div>
+		
+</body>
+</html>
