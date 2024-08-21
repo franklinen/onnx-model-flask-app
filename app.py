@@ -1,13 +1,36 @@
-from flask import Flask, render_template, request, send_file, send_from_directory, redirect
+from flask import Flask, render_template, request, send_from_directory
 import os
 from PIL import Image
 import numpy as np
 import onnxruntime as rt
-import styletransfer
 
 app = Flask(__name__)
 
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
+
+def styletransferProcess(image_path, model_path='./mosaic-9.onnx'):
+    # Open and preprocess the image
+    image = Image.open(image_path)
+    image = image.resize((224, 224), Image.LANCZOS)
+    
+    x = np.array(image).astype('float32')
+    x = np.transpose(x, [2, 0, 1])
+    x = np.expand_dims(x, axis=0)
+    
+    # Model inference
+    session = rt.InferenceSession(model_path)
+    output_name = session.get_outputs()[0].name
+    input_name = session.get_inputs()[0].name
+    result = session.run([output_name], {input_name: x})[0][0]
+    
+    # Postprocess the result
+    result = np.clip(result, 0, 255)
+    result = result.transpose(1, 2, 0).astype("uint8")
+    imag = Image.fromarray(result)
+    output_path = os.path.join(APP_ROOT, 'images', 'styled_' + os.path.basename(image_path))
+    imag.save(output_path)
+    
+    return output_path
 
 @app.route('/')
 def index():
@@ -16,49 +39,22 @@ def index():
 @app.route("/upload", methods=['POST'])
 def upload():
     target = os.path.join(APP_ROOT, 'images/')
-    print("TARGET", target)
-
     if not os.path.isdir(target):
         os.mkdir(target)
-    else:
-        print("Couldn't create upload directory: {}".format(target))
+    
+    file = request.files['file']
+    filename = file.filename
+    destination = os.path.join(target, filename)
+    file.save(destination)
+    
+    # Apply style transfer
+    processed_image_path = styletransferProcess(destination)
+    
+    return render_template("complete.html", image_name=os.path.basename(processed_image_path))
 
-    data = request.form.get("style")
-    print(data)
-
-    myFiles = []
-
-    for file in request.files.getlist("file"):
-         
-        print("file", file)
-        filename = file.filename
-        print("filename", filename)
-        destination = "".join([target, filename])
-        print("destination", destination)
-        file.save(destination)
-        myFiles.append(filename)       
-    print(myFiles)
-
-    return render_template("complete.html", image_names=myFiles, selected_style=data)
-
-# in this function send_image will HAVE to take in the parameter name <filename>
 @app.route('/upload/<filename>')
-def send_original_image(filename):
+def send_image(filename):
     return send_from_directory("images", filename)
 
-# this app route cant be the same as above
-@app.route('/complete/<filename>/<selected_style>')
-def send_processed_image(filename, selected_style):
-	directoryName = os.path.join(APP_ROOT, 'images/')
-
-    #Call the style transfer function and get the path to the processed image
-	newImg = styletransfer.styletransfeProcess(os.path.join(directoryName, filename), selected_style)
-	
-	return send_from_directory("images", newImg)
-
-
-#good practise to have this: this means this will only run if its run directly (and not called from somewhere else)
 if __name__ == "__main__":
-	#remove debug and host when hosting to cloud
-	# Add parameter host='0.0.0.0' to run on your machines IP address:
-	app.run(host='0.0.0.0', debug=True)
+    app.run(debug=True)
