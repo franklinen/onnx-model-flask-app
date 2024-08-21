@@ -3,8 +3,10 @@ import numpy as np
 import onnxruntime as rt
 from flask import request, Flask
 
+app = Flask(__name__)
 
-def styletransferProcess(directoryName, filename, selected_style):
+@app.route('/styletransfer', methods=['POST'])
+def styletransferProcess():
     # check if the post request has the file part
     if 'imagefile' not in request.files:
         return 'No file part'
@@ -36,7 +38,7 @@ def styletransferProcess(directoryName, filename, selected_style):
         # postprocess
         result = np.clip(result, 0, 255)
         result = result.transpose(1,2,0).astype("uint8")
-        imag = Image.fromarray(result).show()
+        imag = Image.fromarray(result)
         output_path = "./images/styled_" + imagefile.filename
         imag.save(output_path)
     
@@ -46,4 +48,9 @@ def styletransferProcess(directoryName, filename, selected_style):
 
 
 if __name__ == '__main__':
-    styletransferProcess('/directory', 'image', 'model')
+    app.run(debug=True)
+    #styletransferProcess('/directory', 'image', 'model')
+
+
+
+
